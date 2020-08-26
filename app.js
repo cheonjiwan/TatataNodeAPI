@@ -16,6 +16,11 @@ database: "UserInfo"
 
 
 app.use(express.static(path.join(__dirname, 'html')));
+app.use(function(req, res, next){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");                    
+    next();
+})
 app.get("/", function(req, res){
     res.sendFile(path.join(__dirname, 'html', 'main.html'));
 });
@@ -36,6 +41,11 @@ app.get("/gps", function(req, res){
 });
 
 app.get("/getinfo", function(req, res){
+    req.connection.setTimeout( 60 * 3 * 1000) // set timeout 3 min.
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");                    
+
     var device_id = req.query.id;
 
     var sql = "select * from user_info where device_id="+device_id;
