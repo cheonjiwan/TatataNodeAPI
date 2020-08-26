@@ -17,7 +17,7 @@ left=0, right=1
       
 ### API    
 * /getinfo      
-method: GET
+method: GET       
 dataType: json     
 request body: {id: id}       
 response body: {user_id, age, sex, phone_num, photo_url, user_address, etc}     
