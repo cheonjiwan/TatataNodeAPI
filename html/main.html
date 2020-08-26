@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <!-- meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"/ -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Input UserInfo</title>
+        <!-- Bootstrap -->
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요한) -->
+        <script src="http://code.jquery.com/jquery.js"></script>
+        <!-- 모든 합쳐진 플러그인을 포함하거나 (아래) 필요한 각각의 파일들을 포함하세요 -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <!-- Respond.js 으로 IE8 에서 반응형 기능을 활성화하세요 (https://github.com/scottjehl/Respond) -->
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    </head>
+    <body>
+        <div class="container"><!-- 좌우측의 공간 확보 -->
+            <!-- 헤더 들어가는 부분 -->
+            
+            <div class="row">
+                <p></p>
+                
+            </div>
+            
+            <!-- 모달창 -->
+            <div class="modal fade" id="defaultModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title">Notification</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p class="modal-contents"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <!--// 모달창 -->
+            <hr/>
+            <!-- 본문 들어가는 부분 -->
+                
+ 
+ 
+            <form class="form-horizontal" id="frm" role="form" method="get" action="/about">
+                
+                <div class="form-group" id="divId">
+                    <label for="inputId" class="col-lg-2 control-label">Device ID</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control onlyAlphabetAndNumber" id="id" data-rule-required="true" name="id" placeholder="Device ID" maxlength="30">
+                    </div>
+                </div>
+
+                <div class="form-group" id="divName">
+                    <label for="inputName" class="col-lg-2 control-label">Name</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control onlyHangul" id="name" name="name" data-rule-required="true" placeholder="Name" maxlength="15">
+                    </div>
+                </div>
+
+                <div class="form-group" id="divAge">
+                    <label for="inputAge" class="col-lg-2 control-label">Age</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control onlyNumber" id="age" name="age" data-rule-required="true" placeholder="Age" maxlength="30">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputPhoneNumber" class="col-lg-2 control-label">Gender</label>
+                    <div class="col-lg-10">
+                        <select class="form-control" id="gender" name="gender">
+                            <option value="M">M</option>
+                            <option value="F">F</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="divPhoneNumber">
+                    <label for="inputPhoneNumber" class="col-lg-2 control-label">Phone Number</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control onlyNumber" id="phoneNumber" name="phonenumber" data-rule-required="true" placeholder="Phone" maxlength="11">
+                    </div>
+                </div>
+
+                <div class="form-group" id="divPhoto">
+                    <label for="inputPhoto" class="col-lg-2 control-label">Photo</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" id="photo" name="photo" data-rule-required="true" placeholder="Photo" maxlength="30">
+                    </div>
+                </div>
+                
+                
+                <div class="form-group" id="divAddress">
+                    <label for="inputAddress" class="col-lg-2 control-label">Address</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" id="address" name="address" data-rule-required="true" placeholder="Address" maxlength="15">
+                    </div>
+                </div>
+                
+                <div class="form-group" id="divEtc">
+                    <label for="inputEtc" class="col-lg-2 control-label">Etc</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" id="etc" name="etc" data-rule-required="true" placeholder="Etc" maxlength="40">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="col-lg-offset-2 col-lg-10">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+        
+        
+        <script>
+        
+            $(function(){
+                //모달을 전역변수로 선언
+                var modalContents = $(".modal-contents");
+                var modal = $("#defaultModal");
+                
+                $('.onlyAlphabetAndNumber').keyup(function(event){
+                    if (!(event.keyCode >=37 && event.keyCode<=40)) {
+                        var inputVal = $(this).val();
+                        $(this).val($(this).val().replace(/[^_a-z0-9]/gi,'')); //_(underscore), 영어, 숫자만 가능
+                    }
+                });
+                
+                // $(".onlyHangul").keyup(function(event){
+                //     if (!(event.keyCode >=37 && event.keyCode<=40)) {
+                //         var inputVal = $(this).val();
+                //         $(this).val(inputVal.replace(/[a-z0-9]/gi,''));
+                //     }
+                // });
+            
+                $(".onlyNumber").keyup(function(event){
+                    if (!(event.keyCode >=37 && event.keyCode<=40)) {
+                        var inputVal = $(this).val();
+                        $(this).val(inputVal.replace(/[^0-9]/gi,''));
+                    }
+                });
+                
+                //------- 검사하여 상태를 class에 적용
+                $('#id').keyup(function(event){
+                    
+                    var divId = $('#divId');
+                    
+                    if($('#id').val()==""){
+                        divId.removeClass("has-success");
+                        divId.addClass("has-error");
+                    }else{
+                        divId.removeClass("has-error");
+                        divId.addClass("has-success");
+                    }
+                });
+                
+                $('#age').keyup(function(event){
+                    
+                    var divAge = $('#divAge');
+                    
+                    if($('#age').val()==""){
+                        divAge.removeClass("has-success");
+                        divAge.addClass("has-error");
+                    }else{
+                        divAge.removeClass("has-error");
+                        divAge.addClass("has-success");
+                    }
+                });
+                
+                $('#photo').keyup(function(event){
+                    
+                    var divPhoto = $('#divPhoto');
+                    
+                    if($('#photo').val()==""){
+                        divPhoto.removeClass("has-success");
+                        divPhoto.addClass("has-error");
+                    }else{
+                        divPhoto.removeClass("has-error");
+                        divPhoto.addClass("has-success");
+                    }
+                });
+                
+                $('#name').keyup(function(event){
+                    
+                    var divName = $('#divName');
+                    
+                    if($.trim($('#name').val())==""){
+                        divName.removeClass("has-success");
+                        divName.addClass("has-error");
+                    }else{
+                        divName.removeClass("has-error");
+                        divName.addClass("has-success");
+                    }
+                });
+                
+                $('#address').keyup(function(event){
+                    
+                    var divAddress = $('#divAddress');
+                    
+                    if($.trim($('#address').val())==""){
+                        divAddress.removeClass("has-success");
+                        divAddress.addClass("has-error");
+                    }else{
+                        divAddress.removeClass("has-error");
+                        divAddress.addClass("has-success");
+                    }
+                });
+                
+                $('#etc').keyup(function(event){
+                    
+                    var divEtc = $('#divEtc');
+                    
+                    if($.trim($('#etc').val())==""){
+                        divEtc.removeClass("has-success");
+                        divEtc.addClass("has-error");
+                    }else{
+                        divEtc.removeClass("has-error");
+                        divEtc.addClass("has-success");
+                    }
+                });
+                
+                $('#phoneNumber').keyup(function(event){
+                    
+                    var divPhoneNumber = $('#divPhoneNumber');
+                    
+                    if($.trim($('#phoneNumber').val())==""){
+                        divPhoneNumber.removeClass("has-success");
+                        divPhoneNumber.addClass("has-error");
+                    }else{
+                        divPhoneNumber.removeClass("has-error");
+                        divPhoneNumber.addClass("has-success");
+                    }
+                });
+                
+                
+                //------- validation 검사
+                $( "form" ).submit(function( event ) {
+                    
+                    var provision = $('#provision');
+                    var memberInfo = $('#memberInfo');
+                    var divId = $('#divId');
+                    var divAge = $('#divAge');
+                    var divPhoneNumber = $('#divPhoneNumber');
+                    var divName = $('#divName');
+                    var divAddress = $('#divAddress');
+                    var divEtc = $('#divEtc');
+                    var divPhoto = $('#divPhoto');
+                    
+                    // device id
+                    if($('#id').val()==""){
+                        modalContents.text("Please input Device ID");
+                        modal.modal('show');
+                        
+                        divId.removeClass("has-success");
+                        divId.addClass("has-error");
+                        $('#id').focus();
+                        return false;
+                    }else{
+                        divId.removeClass("has-error");
+                        divId.addClass("has-success");
+                    }
+                    
+                    // name
+                    if($('#name').val()==""){
+                        modalContents.text("Please input name");
+                        modal.modal('show');
+                        
+                        divName.removeClass("has-success");
+                        divName.addClass("has-error");
+                        $('#name').focus();
+                        return false;
+                    }else{
+                        divName.removeClass("has-error");
+                        divName.addClass("has-success");
+                    }
+
+                    // age
+                    if($('#age').val()==""){
+                        modalContents.text("Please input age");
+                        modal.modal('show');
+                        
+                        divAge.removeClass("has-success");
+                        divAge.addClass("has-error");
+                        $('#age').focus();
+                        return false;
+                    }else{
+                        divAge.removeClass("has-error");
+                        divAge.addClass("has-success");
+                    }
+                    
+                    // phone number
+                    if($('#phoneNumber').val()==""){
+                        modalContents.text("Please input phone number");
+                        modal.modal('show');
+                        
+                        divPhoneNumber.removeClass("has-success");
+                        divPhoneNumber.addClass("has-error");
+                        $('#phoneNumber').focus();
+                        return false;
+                    }else{
+                        divPhoneNumber.removeClass("has-error");
+                        divPhoneNumber.addClass("has-success");
+                    }
+
+                    // photo
+                    if($('#photo').val()==""){
+                        modalContents.text("Please input photo url");
+                        modal.modal('show');
+                        
+                        divPhoto.removeClass("has-success");
+                        divPhoto.addClass("has-error");
+                        $('#photo').focus();
+                        return false;
+                    }else{
+                        divPhoto.removeClass("has-error");
+                        divPhoto.addClass("has-success");
+                    }
+                    
+                    // address
+                    if($('#address').val()==""){
+                        modalContents.text("Please input address");
+                        modal.modal('show');
+                        
+                        divAddress.removeClass("has-success");
+                        divAddress.addClass("has-error");
+                        $('#address').focus();
+                        return false;
+                    }else{
+                        divAddress.removeClass("has-error");
+                        divAddress.addClass("has-success");
+                    }
+                    
+                    // etc
+                    if($('#etc').val()==""){
+                        modalContents.text("Please input etc");
+                        modal.modal('show');
+                        
+                        divEtc.removeClass("has-success");
+                        divEtc.addClass("has-error");
+                        $('#etc').focus();
+                        return false;
+                    }else{
+                        divEtc.removeClass("has-error");
+                        divEtc.addClass("has-success");
+                    }
+                    
+                    
+                });
+
+            });
+            
+        </script>
+                <!--// 본문 들어가는 부분 -->
+            <hr/>
+            <!-- 푸터 들어가는 부분 -->
+            
+            
+            <!--// 푸터 들어가는 부분 -->
+        </div>
+    </body>
+</html>
+ 
