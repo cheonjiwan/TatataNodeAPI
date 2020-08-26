@@ -2,6 +2,18 @@ var express = require('express');
 var io = require('socket.io');
 var path = require('path');
 var app = express();
+    
+var mysql = require("mysql"); // mysql 모듈을 불러옵니다.
+
+// 커넥션을 정의합니다.
+// RDS Console 에서 본인이 설정한 값을 입력해주세요.
+var connection = mysql.createConnection({
+host: "userinfo-db.cfndrgetutvs.ap-northeast-2.rds.amazonaws.com",
+user: "jiwan",
+password: "wan2good",
+database: "UserInfo"
+});
+
 
 app.use(express.static(path.join(__dirname, 'html')));
 app.get("/", function(req, res){
@@ -23,19 +35,41 @@ app.get("/gps", function(req, res){
     res.send(JSON.stringify(obj));
 });
 
+app.get("/getinfo", function(req, res){
+    var device_id = req.query.id;
+
+    var sql = "select * from user_info where device_id="+device_id;
+    connection.connect(function(err) {
+        if (err) {
+            throw err; // 접속에 실패하면 에러를 throw 합니다.
+        } else {
+            // 접속시 쿼리를 보냅니다.
+            connection.query(sql, function(err, rows, fields) {
+                console.log(rows[0]);
+                var d = rows[0];
+                if(d != undefined){
+                    var data = {
+                        user_id: d['user_name'],
+                        age: d['age'],
+                        sex: d['sex'],
+                        phone_num: d['phone_num'],
+                        photo_url: d['photo_url'],
+                        user_address: d['user_address'],
+                        etc: d['etc']
+                    }
+                    res.send(JSON.stringify(data));
+                }
+                else{
+                    res.send("no data");
+                }
+            });
+        }
+    });
+
+})
+
 app.get("/about", function (req, res) {
     res.sendFile(path.join(__dirname, 'html', 'about.html'));
-    
-    var mysql = require("mysql"); // mysql 모듈을 불러옵니다.
-
-    // 커넥션을 정의합니다.
-    // RDS Console 에서 본인이 설정한 값을 입력해주세요.
-    var connection = mysql.createConnection({
-    host: "userinfo-db.cfndrgetutvs.ap-northeast-2.rds.amazonaws.com",
-    user: "jiwan",
-    password: "wan2good",
-    database: "UserInfo"
-    });
 
     var device_id = req.query.id;
     var user_name = req.query.name;
