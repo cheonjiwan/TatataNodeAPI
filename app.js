@@ -77,6 +77,11 @@ socketServer.on("connection", socket=>{
         socket.broadcast.emit("sendGPS", {data: req});
     })
 
+    socket.on("turnCCTV", req=>{
+        console.log(req);
+        socket.broadcast.emit("turnCCTV", {data: req});
+    })
+
     socket.on("disconnection", socket=>{
         console.log("disconnect client manually - id: " + socket.id);
     })
