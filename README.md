@@ -5,7 +5,7 @@ smart emergency monitoring system and smart wristband for a quick emergency call
 ### Components     
 - Web Server for Socket I/O (Node.js) -> see our root directory     
 - RaspberryPi 4 for smart CCTV (Python)    
-- RaspberryPi 4 for smart wristband (Python)    
+- [RaspberryPi 4 for smart wristband](https://github.com/kjsu0209/TatataNodeAPI/tree/master/band(client)) (Python)  
 - [Web App for Emergency Dashboard](https://github.com/kjsu0209/TatataNodeAPI/tree/master/myApp) (HTML, JavaScript)      
 
 ----
@@ -52,3 +52,19 @@ This Dashboard can get/show data whenever user call.
 #### 4. CCTV monitoring/control      
 Stream the nearest CCTV screen and control the CCTV.
 
+-------------------
+
+## RaspberryPi 4 for smart wristband
+
+### Purpose
+For our webOS project, this Pi sends location information and user data to the web server.
+
+### Component
+1 RaspberryPi4, 1 Buzzer sensor, 1 Button sensor, 1 GPS sensor.
+
+### Process
+
+* Raspi always checks if the emergency button is pressed.
+* When the button is pressed for 3 seconds, raspi gets user location data from GPS sensor.
+* Raspi sends the location data, user information and unique device number to the server.
+* Also, make sound through a buzzer sensor.
