@@ -6,7 +6,7 @@ smart emergency monitoring system and smart wristband for a quick emergency call
 - Web Server for Socket I/O (Node.js) -> see our root directory     
 - RaspberryPi 4 for smart CCTV (Python)    
 - RaspberryPi 4 for smart wristband (Python)    
-- Web App for Emergency Dashboard (HTML, JavaScript)      
+- [Web App for Emergency Dashboard](https://github.com/kjsu0209/TatataNodeAPI/tree/master/myApp) (HTML, JavaScript)      
 
 ----
 
