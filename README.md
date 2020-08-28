@@ -37,6 +37,7 @@ response body: {user_id, age, sex, phone_num, photo_url, user_address, etc}
 ### User registration     
 * /
 
+-------------------
 
 ## Web App for Emergency Dashboard
        
