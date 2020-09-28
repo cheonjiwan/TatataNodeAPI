@@ -49,32 +49,28 @@ app.get("/getinfo", function(req, res){
     var device_id = req.query.id;
 
     var sql = "select * from user_info where device_id="+device_id;
-    connection.connect(function(err) {
-        if (err) {
-            throw err; // 접속에 실패하면 에러를 throw 합니다.
-        } else {
-            // 접속시 쿼리를 보냅니다.
-            connection.query(sql, function(err, rows, fields) {
-                console.log(rows[0]);
-                var d = rows[0];
-                if(d != undefined){
-                    var data = {
-                        user_id: d['user_name'],
-                        age: d['age'],
-                        sex: d['sex'],
-                        phone_num: d['phone_num'],
-                        photo_url: d['photo_url'],
-                        user_address: d['user_address'],
-                        etc: d['etc']
-                    }
-                    res.send(JSON.stringify(data));
-                }
-                else{
-                    res.send("no data");
-                }
-            });
+
+    // 접속시 쿼리를 보냅니다.
+    connection.query(sql, function(err, rows, fields) {
+        console.log(rows[0]);
+        var d = rows[0];
+        if(d != undefined){
+            var data = {
+                user_id: d['user_name'],
+                age: d['age'],
+                sex: d['sex'],
+                phone_num: d['phone_num'],
+                photo_url: d['photo_url'],
+                user_address: d['user_address'],
+                etc: d['etc']
+            }
+            res.send(JSON.stringify(data));
+        }
+        else{
+            res.send("no data");
         }
     });
+
 
 })
 
