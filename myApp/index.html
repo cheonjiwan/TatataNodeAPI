@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Example Web App</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+<style type="text/css">
+    body {
+        width: 100%;
+        height: 100%;
+        background-color:white;
+    }
+    /* div {
+        position:absolute;
+        height:100%;
+        width:100%;
+        display: table;
+    } */
+    h1 {
+        display: table-cell;
+        vertical-align: middle;
+        text-align:center;
+    }
+
+    #map {
+        height: 100%;
+    }
+
+    .containerForWebOS{
+        position:absolute;
+        height:100%;
+        width:100%;
+        display:flex;
+        padding: 4rem;
+    }
+    .leftside{
+        flex: 1;
+        padding: 2rem;
+    }
+    .rightside{
+        flex: 1;
+        padding: 4rem;
+    }
+    
+</style>
+<script
+src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap&libraries=&v=weekly"
+defer
+></script>
+<script type="text/javascript">
+window.onload = function() {
+    var bridge = new WebOSServiceBridge();
+    /*
+     *  getTimeApi calls gettime of systemservice, a module in the platform.
+     */
+    var getTimeApi = 'luna://com.webos.service.systemservice/clock/getTime';
+    var getTimeParams = '{}';
+
+    /*
+     *  helloApi calls the hello method of js_service template provided by CLI.
+     *  In this case, the service name is used as default name "com.domain.app.service" is.
+     *  If you change this service name, you need to change the service name of the following API.
+     *
+     *  If you change the name to helloparmas as you want, the contents will be reflected on the screen.
+     */
+    var helloApi = 'luna://com.domain.app.service/hello';
+    var helloParams = '{"name":"webOS"}';
+
+    function getTime_callback(msg){
+        var arg = JSON.parse(msg);
+        if (arg.returnValue) {
+            console.log("[APP_NAME: example web app] GETTIME_SUCCESS UTC : " + arg.utc);
+            //webOSSystem.PmLogString(6, "GETTIME_SUCCESS", '{"APP_NAME": "example web app"}', "UTC : " + arg.utc);
+        }
+        else {
+            console.error("[APP_NAME: example web app] GETTIME_FAILED errorText : " + arg.errorText);
+            //webOSSystem.PmLogString(3, "GETTIME_FAILED", '{"APP_NAME": "example web app"}', "errorText : " + arg.errorText);
+        }
+    }
+
+    function hello_callback(msg){
+        var arg = JSON.parse(msg);
+        if (arg.returnValue) {
+            document.getElementById("txt_msg").innerHTML = arg.Response;
+            console.log("[APP_NAME: example web app] CALLHELLO_SUCCESS response : " + arg.Response);
+            //webOSSystem.PmLogString(6, "CALLHELLO_SUCCESS", '{"APP_NAME": "example web app"}', "response : " + arg.Response);
+        }
+        else {
+            console.error("[APP_NAME: example web app] CALLHELLO_FAILED errorText : " + arg.errorText);
+            //webOSSystem.PmLogString(3, "CALLHELLO_FAILED", '{"APP_NAME": "example web app"}', "errorText : " + arg.errorText);
+        }
+    }
+
+    bridge.onservicecallback = getTime_callback;
+    bridge.call(getTimeApi, getTimeParams);
+    document.getElementById("txt_msg").onclick = function() {
+        bridge.onservicecallback = hello_callback;
+        bridge.call(helloApi, helloParams);
+    };
+}
+
+
+function moveMap(lat, lng){
+    var location = {lat: lat, lng: lng};
+    // The marker
+    var marker = new google.maps.Marker({position: location, map: map});
+    var center = new google.maps.LatLng(lat, lng);
+    // using global variable:
+    map.panTo(center);
+}
+function setDashboard(device_id){
+    var inner = "";
+    var date = new Date();
+    inner += "<p>request time: " + date.toString() + "</p>";
+    inner += "<p>device_id : " + data['data']['device_id'] + "</p>";
+    document.getElementById("userinfo").innerHTML = inner;
+}
+
+</script>
+</head>
+<body>
+    <div style="position:absolute; width:100%; background-color:#539AF0; color: white; height: 4rem; padding:1rem;">
+        <h1 id="txt_msg">Emergency Dashboard</h1>
+    </div>
+
+    <div class="containerForWebOS">
+        <div class="leftside">
+            <div id="map"></div>
+        </div>
+        <div class="rightside">
+            <div class="card mb-3" style="max-width: 540px;">
+                <div class="row no-gutters">
+                  <div class="col-md-4">
+                    <img id="user_photo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQnT7v5DUNWXTOZ4I7SgqePF9ANSX3LrpF9aA&usqp=CAU" class="card-img" alt="...">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title" id="device_id">No info</h5>
+                      <p class="card-text" id="send_date"></p>
+                      <p class="card-text" id="user_info"></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            
+            <div class="monitor">
+                <h1>CCTV</h1>
+                <button id="t_left" onclick="turnCCTV(0)" class="btn btn-primary">Turn Left</button>
+                <button id="t_right" onclick="turnCCTV(1)" class="btn btn-primary">Turn Right</button>
+                <hr>
+                <iframe id="cctv" src="" frameborder="0" width="720px" height="480px"></iframe>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
+    <script>
+
+    let map;
+
+    function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: -34.397, lng: 150.644 },
+        zoom: 18
+    });
+    }
+    var socket = io('http://13.124.113.190:8080');
+    socket.on('connect', function(){
+        console.log("connected");
+    });
+    socket.on('sendGPS', function(data){
+        console.log(data);
+        var lat = data['data']['lat'];
+        var lng = data['data']['lng'];
+        
+        var inner = "";
+        var date = new Date();
+        inner += "request time: " + date.toString();
+        document.getElementById("send_date").innerText = inner;  
+        inner = "";
+        inner += "device_id : " + data['data']['device_id'];
+        document.getElementById("device_id").innerText = inner;  
+
+        //get user info
+        $.ajax({
+            url:"http://Tatata.ap-northeast-2.elasticbeanstalk.com/getinfo?id="+data['data']['device_id'],
+            type:"GET",
+            dataType:"json",
+            success: function(data){
+                $("#user_info").text(JSON.stringify(data));
+                $("#user_photo").attr("src", data['photo_url']);
+            },
+            error: function(err){
+                alert(JSON.stringify(err));
+            }
+        })
+
+        var location = {lat: data['data'], lng: lng};
+        var center = new google.maps.LatLng(lat, lng);
+
+        // The marker
+        var marker = new google.maps.Marker({position: center, map: map});
+
+        // using global variable:
+        map.panTo(center);
+
+        var cctv = document.getElementById("cctv");
+        cctv.setAttribute("src", "http://192.168.137.43:8081");
+    });
+    socket.on('disconnect', function(){
+        console.log("disconnected");
+    });
+    function turnCCTV(turn){
+        socket.emit('turnCCTV', turn);
+
+    }
+
+    
+    </script>
+</body>
+</html>
