@@ -74,3 +74,4 @@ For our webOS project, this Pi sends location information and user data to the w
 ## Demo     
 
 ![image](https://user-images.githubusercontent.com/35682236/94402345-e306ba80-01a6-11eb-89ff-8a32efde745f.png)
+![image2](https://user-images.githubusercontent.com/35682236/94449561-2d0f9080-01e7-11eb-9de3-fe8f74a01541.png)
