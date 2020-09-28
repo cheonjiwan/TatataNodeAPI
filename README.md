@@ -68,3 +68,9 @@ For our webOS project, this Pi sends location information and user data to the w
 * When the button is pressed for 3 seconds, raspi gets user location data from GPS sensor.
 * Raspi sends the location data, user information and unique device number to the server.
 * Also, make sound through a buzzer sensor.
+
+-------------------
+
+## Demo     
+
+![image](https://user-images.githubusercontent.com/35682236/94402345-e306ba80-01a6-11eb-89ff-8a32efde745f.png)
